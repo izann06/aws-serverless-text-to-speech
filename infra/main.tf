@@ -47,3 +47,50 @@ resource "aws_lambda_function" "lambda_texto" {                              # D
     }
   }
 }
+
+# Politica de permisos para la lambda
+resource "aws_iam_policy" "lambda_permisos" {
+  name        = "politica_permisos_lambda"
+  description = "Permisos para que la lambda acceda a CloudWatch, S3 y Polly (IA)"
+
+  #Se define la politica de permisos
+  policy = jsonencode({
+    version = "2012-10-17"
+
+    # Permisos Cloudwatch
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ]
+        Resource = "arn:aws:logs:*:*:*" # Se permite todo lo relacionado con la creacion, escritura y lectura de logs
+      },
+
+      # Permisos S3
+      {
+        Effect = "Allow"
+        Action = [
+          "s3:GetObject" # Se permite la lectura de objetos del bucket
+        ]
+        Resource = "${aws_s3_bucket.bucket_textos.arn}/*" # Se permite la lectura de objetos del bucket
+      },
+      # Permisos Polly
+      {
+        Effect = "Allow"
+        Action = [
+          "polly:SynthesizeSpeech" # Se permite la sintesis de voz
+        ]
+        Resource = "*" # Polly no requiere permisos de recursos, esto se lo da AWS por defecto
+      }
+    ]
+  })
+}
+
+#Union del rol con la politica (attach)
+resource "aws_iam_role_policy_attachment" "conexion_rol_politica" {
+  role       = aws_iam_role.lambda_ejecucion.name
+  policy_arn = aws_iam_policy.lambda_permisos.arn
+}
