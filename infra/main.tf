@@ -94,3 +94,25 @@ resource "aws_iam_role_policy_attachment" "conexion_rol_politica" {
   role       = aws_iam_role.lambda_ejecucion.name
   policy_arn = aws_iam_policy.lambda_permisos.arn
 }
+
+# Permiso para que S3 pueda ejecutar la lambda (TRIGGER)
+resource "aws_lambda_permission" "permitir_s3" {
+  statement_id  = "permiso_s3_trigger"                           # Identificador unico para este permiso
+  action        = "lambda:InvokeFunction"                        # Accion que se permite
+  function_name = aws_lambda_function.lambda_texto.function_name # Nombre de la funcion lambda
+  principal     = "s3.amazonaws.com"                             # Servicio que tiene permisos para ejecutar la función lambda
+  source_arn    = aws_s3_bucket.bucket_textos.arn                # ARN del bucket s3
+}
+
+# Notificacion de bucket s3
+resource "aws_s3_bucket_notification" "notificacion_bucket" {
+  bucket = aws_s3_bucket.bucket_textos.id # Nombre del bucket s3
+
+  lambda_function {
+    lambda_function_arn = aws_lambda_function.lambda_texto.arn
+    events              = ["s3:ObjectCreated:*"] # Eventos que activan la lambda (subida de objetos)
+    filter_suffix       = ".txt"                 # Filtra por extension de archivo
+  }
+
+  depends_on = [aws_lambda_permission.permitir_s3] # Dependencia para que la lambda se cree antes de la notificacion del bucket
+}
