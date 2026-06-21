@@ -55,7 +55,7 @@ resource "aws_iam_policy" "lambda_permisos" {
 
   #Se define la politica de permisos
   policy = jsonencode({
-    version = "2012-10-17"
+    Version = "2012-10-17"
 
     # Permisos Cloudwatch
     Statement = [
