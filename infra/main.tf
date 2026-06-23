@@ -73,7 +73,8 @@ resource "aws_iam_policy" "lambda_permisos" {
       {
         Effect = "Allow"
         Action = [
-          "s3:GetObject" # Se permite la lectura de objetos del bucket
+          "s3:GetObject", # Se permite la lectura de objetos del bucket
+          "s3:PutObject"
         ]
         Resource = "${aws_s3_bucket.bucket_textos.arn}/*" # Se permite la lectura de objetos del bucket
       },
