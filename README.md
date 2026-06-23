@@ -4,6 +4,7 @@ Bienvenido/a a este repositorio. Este proyecto es el resultado de mi inmersión 
 
 Aquí documento cómo he diseñado, desplegado y asegurado una arquitectura 100% Serverless en Amazon Web Services utilizando Terraform, con un objetivo claro: aprender haciendo, tropezando y solucionando problemas reales.
 
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 🎯 El Objetivo
 
