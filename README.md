@@ -2,23 +2,23 @@
 
 Bienvenido/a a este repositorio. Este proyecto es el resultado de mi inmersión práctica en el mundo del Cloud Computing y la Infraestructura como Código (IaC).
 
-Aquí documento cómo he diseñado, desplegado y asegurado una arquitectura 100% Serverless en Amazon Web Services utilizando Terraform, con un objetivo claro: aprender haciendo, tropezando y solucionando problemas reales.
+Aquí documento cómo he diseñado, desplegado y asegurado una arquitectura 100% Serverless en Amazon Web Services utilizando Terraform, con un objetivo claro: Aprender con soluciones reales.
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 🎯 El Objetivo
 
-La premisa del proyecto es sencilla pero muy visual: automatizar la conversión de texto a audio sin tener que encender ni mantener servidores.
+El objetivo del proyecto es sencillo, automatizar la conversión de texto a audio sin tener que encender ni mantener servidores.
 
-Quería construir un sistema que solo consumiera recursos (y por tanto, dinero) en el momento exacto en el que se le necesita. El flujo es el siguiente:
+El flujo es el siguiente:
 
 - Subes un archivo .txt a la nube.
 
-- El sistema lo detecta y se "despierta" automáticamente.
+- El sistema lo detecta automáticamente.
 
 - Una Inteligencia Artificial lee el texto y genera un archivo .mp3.
 
-- El sistema guarda el audio y vuelve a dormirse.
+- El sistema guarda el audio.
 
 Todo esto, construido de forma automatizada y replicable mediante código, manteniendo la factura de AWS estrictamente en 0,00€ aprovechando la capa gratuita.
 
@@ -56,7 +56,7 @@ El Puente de Comunicación: Finalmente, configuré los Triggers. Le di permiso e
 
 La mejor parte de este proyecto han sido los errores. Tropezar con ellos me ha obligado a buscar en la documentación, leer logs en CloudWatch y entender realmente cómo es AWS. Estos fueron mis tres mayores aprendizajes:
 
-- El guardia de seguridad y el AccessDenied: Al probar el proyecto por primera vez, el texto se leía, pero el .mp3 no se guardaba. Revisando los logs en la Lmabda dentoro de CloudWatch descubrí que AWS había bloqueado a mi propia Lambda. Eso pasó porque le había dado permiso (IAM) para leer (s3:GetObject) pero olvidé darle permiso explícito para escribir (s3:PutObject). 
+- El guardia de seguridad y el AccessDenied: Al probar el proyecto por primera vez, el texto se leía, pero el .mp3 no se guardaba. Revisando los logs en la Lambda dentro de CloudWatch descubrí que AWS había bloqueado a mi propia Lambda. Eso pasó porque le había dado permiso (IAM) para leer (s3:GetObject) pero olvidé darle permiso explícito para escribir (s3:PutObject). 
 
 - La exigencia de la sintaxis JSON: Terraform usa su propio lenguaje (HCL), pero AWS exige que las políticas de seguridad se envíen en JSON estricto. Me enfrenté a un error de despliegue (MalformedPolicyDocument) simplemente por escribir version = "2012-10-17" con la "v" en minúscula en lugar de mayúscula.
 
